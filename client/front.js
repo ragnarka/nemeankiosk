@@ -7,7 +7,11 @@
  */
 
 Template.front.events = {
-    'click .btn': function() {
-        Meteor.Router.to("/cart");
+    /**
+     * Handling click events on buttons in front.
+     */
+    'click .btn': function(e) {
+        Meteor.Router.to(e.getAttribute("href"));
+        e.preventDefault();
     }
 }
