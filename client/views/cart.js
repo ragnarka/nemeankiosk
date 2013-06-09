@@ -1,5 +1,5 @@
 (function (Meteor) {
-	
-	//Insert code here
-	
+
+    //Insert code here
+
 }(Meteor));
