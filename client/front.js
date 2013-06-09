@@ -5,6 +5,7 @@
  * Time: 1:28 AM
  * To change this template use File | Settings | File Templates.
  */
+(function (Meteor) {
 
 Template.front.events = {
     /**
@@ -15,3 +16,4 @@ Template.front.events = {
         e.preventDefault();
     }
 }
+}(Meteor));
