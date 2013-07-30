@@ -5,7 +5,7 @@
  * Time: 21:31
  * To change this template use File | Settings | File Templates.
  */
-(function (Meteor, $) {
+(function (Meteor, $, _) {
 
     var barcode = '';
     function login() {
@@ -29,16 +29,28 @@
 
 
     function checkLogin(barcode) {
-        console.log(barcode);
-        if (barcode == "1234")
+        var cashier = findOneCashier(barcode);
+        if (_.isObject(cashier))
         {
-            console.log('Jaaa');
             Session.set('loggedIn', true);
+            Session.set('user', cashier);
+            Session.set('loginName', cashier.name);
         }
+        else
+        {
+            console.log('Cashier was not found');
+        }
+    }
+
+    function findOneCashier(barcode) {
+        var cashier = _.find(Session.get('cashiers'), function(cashier) {
+            if (cashier.strekkode == barcode) { return cashier; }
+        });
+        return cashier;
     }
 
     Template.login.rendered = function() {
         login();
     }
 
-}(Meteor, $));
+}(Meteor, $, _));

@@ -17,6 +17,7 @@
 <template name="index">
     <h1>Nemean Kiosk</h1>
     {{#if loggedIn}}
+        <span style="float: right;">Innlogget som <b>{{displayName}}</b></span>
         {{>menu}}
     {{/if}}
     <div class="well">
@@ -26,5 +27,4 @@
             {{>login}}
         {{/if}}
     </div>
-
 </template>
