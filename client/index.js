@@ -9,7 +9,9 @@
 	});
 
 
-
+    Template.index.loggedIn = function() {
+        return Session.get('loggedIn');
+    }
 
 	Meteor.Router.add({
 		"/": "front",
@@ -20,4 +22,4 @@
         "/stats": "stats"
 	});
 
-}(Meteor));
+}(Meteor, _));
