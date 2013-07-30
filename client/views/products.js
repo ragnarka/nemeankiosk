@@ -1,7 +1,14 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: Ragnar
- * Date: 6/9/13
- * Time: 12:39 AM
- * To change this template use File | Settings | File Templates.
- */
+
+(function (Meteor) {
+
+    //Insert code here
+    Template.products.helpers({
+
+        products: function(){
+            Meteor.call('getProducts', function(errors, result) {
+                Session.set('products', result);
+            });
+            return Session.get("products");
+        }
+    });
+}(Meteor));

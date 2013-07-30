@@ -21,8 +21,7 @@
                 // Make sale for Cashier
                     barcode = "";
                 }
-            }
-        });
+            });
     }
 
     function findProduct(barcode) {

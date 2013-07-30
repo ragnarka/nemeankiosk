@@ -1,4 +1,9 @@
 <template name="products">
     <h2>Vareliste</h2>
+    <div id="products">
+        {{#each products}}
+        <h4>{{name}} - {{pris}}</h4>
+        {{/each}}
+    </div>
 
 </template>
