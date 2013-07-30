@@ -10,7 +10,7 @@
 	});
 
 	Meteor.Router.add({
-		"/": "cart",
+		"/": "start",
 		"/cart": "cart",
         "/products": "products",
         "/cashiers": "cashiers",
