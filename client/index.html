@@ -2,20 +2,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Nemean Kiosk</title>
-<<<<<<< HEAD
-    <link href="layout.css" rel="stylesheet" type="text/css" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-=======
+
     <link href="css/layout.css" rel="stylesheet" type="text/css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
->>>>>>> 2b47eaf0544d8a9e410651f3f51a6ba7f749fb76
 </head>
 
 <body>
-	<header></header>
-	<div class="container">
-    <div class="well">
-    {{renderPage}}
-    </div>
+    <header></header>
+    <div class="container">
+        <h2>Nemean Kiosk</h2>
+        {{>menu}}
+        <br>
+        <div class="well">
+            {{renderPage}}
+        </div>
     </div>
 </body>
