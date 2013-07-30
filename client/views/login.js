@@ -28,10 +28,11 @@
     }
 
 
-    function checkLogin() {
+    function checkLogin(barcode) {
         console.log(barcode);
-        if (barcode == '1234')
+        if (barcode == "1234")
         {
+            console.log('Jaaa');
             Session.set('loggedIn', true);
         }
     }

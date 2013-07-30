@@ -9,18 +9,22 @@
 <body>
 	<header></header>
 	<div class="container">
-        <h1>Nemean Kiosk</h1>
-        <div class="well">
-            {{>index}}
-        </div>
+        {{>index}}
     </div>
 </body>
 
 
 <template name="index">
+    <h1>Nemean Kiosk</h1>
     {{#if loggedIn}}
-        {{renderPage}}
-    {{else}}
-        {{>login}}
+        {{>menu}}
     {{/if}}
+    <div class="well">
+        {{#if loggedIn}}
+            {{renderPage}}
+        {{else}}
+            {{>login}}
+        {{/if}}
+    </div>
+
 </template>

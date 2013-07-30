@@ -14,7 +14,7 @@
     }
 
 	Meteor.Router.add({
-		"/": "front",
+		"/": "cart",
 		"/cart": "cart",
         "/products": "products",
         "/cashiers": "cashiers",
