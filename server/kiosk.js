@@ -42,12 +42,24 @@
         },
 
         updateCashiers: function() {
-            Cashiers.remove({});
+            //Cashiers.remove({});
             console.log('Updating cashiers');
             var JSONstring = Meteor.http.get("http://nemean.no/mTest.html");
             var users = JSON.parse(JSONstring.content);
             _.each(users, function (user) {
-                Cashiers.insert(user);
+                if (!Cashiers.findOne({strekkode:user.strekkode}))
+                {
+                    Cashiers.insert(user);
+                    Meteor.users.insert({email: user.name, password: user.strekkode}, function(err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            console.log('User created');
+                        }
+                    });
+                }
             });
         },
 
@@ -58,8 +70,44 @@
             var products = JSON.parse(JSONstring.content);
             _.each(products, function (product) {
                 Products.insert(product);
-                console.log(product);
             });
+        },
+
+        addCashier: function(cashier) {
+            if (!Cashiers.findOne({strekkode:cashier.strekkode}))
+            {
+                Cashiers.insert(cashier);
+                Meteor.users.insert({email: cashier.name, password: cashier.strekkode}, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else
+                    {
+                        console.log('User created');
+                    }
+                });
+                console.log('Cashier added ' + cashier.name + ' - ' + cashier.strekkode);
+            }
+            else
+            {
+                console.log('Cashier already exists');
+            }
+        },
+
+        addProduct: function(product) {
+            Products.insert(product);
+        },
+
+        removeCashier: function(cashier) {
+            if (Cashiers.findOne({strekkode:cashier.strekkode}))
+            {
+                Cashiers.remove(cashier);
+                console.log('Cashier ' + cashier.name + ' removed');
+            }
+        },
+
+        removeProduct: function(product) {
+
         }
 
     });

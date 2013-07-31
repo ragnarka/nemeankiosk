@@ -1,6 +1,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Nemean Kiosk</title>
     <link href="css/layout.css" rel="stylesheet" type="text/css" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
@@ -16,12 +16,12 @@
 
 <template name="index">
     <h1>Nemean Kiosk</h1>
-    {{#if loggedIn}}
+    {{#if currentUser}}
         <span style="float: right;">Innlogget som <b>{{displayName}}</b></span>
         {{>menu}}
     {{/if}}
     <div class="well">
-        {{#if loggedIn}}
+        {{#if currentUser}}
             {{renderPage}}
         {{else}}
             {{>login}}

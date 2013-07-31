@@ -14,6 +14,7 @@
 		"/cart": "cart",
         "/products": "products",
         "/cashiers": "cashiers",
+        "/cashiers/add": "addCashier",
         "/sales": "sales",
         "/stats": "stats"
 	});
@@ -33,7 +34,11 @@
     }
 
     Template.index.displayName = function() {
-        return Session.get('loginName');
+        return Meteor.user()._id;
+    }
+
+    Template.index.rendered = function() {
+        loadCashiers();
     }
 
 }(Meteor));

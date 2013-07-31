@@ -17,9 +17,9 @@
      *
      * @see checkLogin
      */
-    function login() {
+    //function login() {
+    $(document).ready(function(){
         $("body").keydown(function(event){
-            event.preventDefault();
             if (!Session.get('loggedIn'))
             {
                 /** No user is logged in -> Check if ENTER was pressed **/
@@ -27,12 +27,24 @@
                 if (keyCode == 13)
                 {
                     /** Enter was pressed, check if user is valid and reset string **/
-                    checkLogin(barcode);
+                    //checkLogin(barcode);
+                    Meteor.loginWithScanner(barcode, function(err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else
+                        {
+                            console.log('All ok with login');
+                        }
+                    });
                     barcode = '';
                     return;
                 }
-                /** Build barcode string **/
-                barcode += String.fromCharCode(keyCode);
+                else
+                {
+                    /** Build barcode string **/
+                    barcode += String.fromCharCode(keyCode);
+                }
             }
             else
             {
@@ -41,15 +53,14 @@
                 if (keyCode == 27)
                 {
                     /** ESC was pressed, log user out **/
-                    Session.set('loggedIn', false);
-                    Session.set('user', null);
-                    Session.set('loginName', '');
-                    barcode = '';
+
                     return;
                 }
+                barcode = '';
             }
         });
-    }
+    });
+  //  }
 
 
     /**
@@ -62,9 +73,7 @@
         var cashier = findOneCashier(barcode);
         if (_.isObject(cashier))
         {
-            Session.set('loggedIn', true);
-            Session.set('user', cashier);
-            Session.set('loginName', cashier.name);
+
         }
         else
         {
@@ -87,7 +96,7 @@
     }
 
     Template.login.rendered = function() {
-        login();
+       // login();
     }
 
 }(Meteor, $, _));

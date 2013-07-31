@@ -1,12 +1,12 @@
 (function (Meteor, $) {
 
     //Insert code here
-    var barcode ="",
+    var barcode = '',
         ENTER = 13;
 
     function scan() {
         $("body").keypress(function (e){
-            var keypressed = String.fromCharCode(e.charCode);
+            var keypressed = String.fromCharCode(e.keyCode);
             barcode += keypressed;
 
             if(e.keyCode === ENTER){
@@ -17,11 +17,12 @@
                     barcode = "";
                 }
 
-                if(findCashier(barcode))  // === CASHIER_BARCODE
+                if(findCashier(barcode))  {// === CASHIER_BARCODE
                 // Make sale for Cashier
                     barcode = "";
                 }
-            });
+            }
+        });
     }
 
     function findProduct(barcode) {

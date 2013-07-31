@@ -1,9 +1,45 @@
 <template name="cashiers">
-    <h1>Selgere</h1>
-    <div id="cashiers">
-        {{#each cashiers}}
-        <h4>{{name}}</h4>
-        {{/each}}
+    <h3>Selgere</h3>
+    <a class="btn" href="/cashiers/add">Legg til selger</a>
+    <div>
+        <table class="table table-hover">
+            <thead>
+                <th>Navn</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {{#each cashiers}}
+                    {{#if isEdited strekkode}}
+                        {{>editCashier}}
+                    {{else}}
+                        {{>displayCashier}}
+                    {{/if}}
+                {{/each}}
+            </tbody>
+        </table>
     </div>
+</template>
 
+
+
+<template name="addCashier">
+    <h3>Ny selger</h3>
+    <form class="form-inline">
+        <input id="cName" name="cName" type="text" class="form-control" placeholder="Navn..." autofocus="autofocus" />
+        <input id="strekkode" name="strekkode" type="text" class="form-control" placeholder="Strekkode..." />
+        <button class="btn btn-default" type="submit">Lagre</button>
+    </form>
+</template>
+
+<!-- Normal table row -->
+<template name="displayCashier">
+    <tr id="{{strekkode}}">
+        <td>{{name}}</td>
+        <td><a id="{{strekkode}}" class="btn delete">Slett</a></td>
+    </tr>
+</template>
+
+<!-- Table row in edit mode -->
+<template name="editCashier">
+    <tr><td><input type="text" value="{{name}}" autofocus="autofocus" /></td></tr>
 </template>
