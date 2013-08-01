@@ -1,6 +1,10 @@
 <template name="cashiers">
     <h3>Selgere</h3>
-    <a class="btn" href="/cashiers/add">Legg til selger</a>
+    {{#if addCashier}}
+        {{>addCashier}}
+    {{else}}
+        <a id="addC" class="btn">Legg til selger</a>
+    {{/if}}
     <div>
         <table class="table table-hover">
             <thead>
@@ -23,7 +27,6 @@
 
 
 <template name="addCashier">
-    <h3>Ny selger</h3>
     <form class="form-inline">
         <input id="cName" name="cName" type="text" class="form-control" placeholder="Navn..." autofocus="autofocus" />
         <input id="strekkode" name="strekkode" type="text" class="form-control" placeholder="Strekkode..." />
@@ -34,7 +37,7 @@
 <!-- Normal table row -->
 <template name="displayCashier">
     <tr id="{{strekkode}}">
-        <td>{{name}}</td>
+        <td>{{profile.name}}</td>
         <td><a id="{{strekkode}}" class="btn delete">Slett</a></td>
     </tr>
 </template>

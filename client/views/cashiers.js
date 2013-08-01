@@ -7,7 +7,7 @@
  */
 (function (Meteor) {
 
-    //Insert code here
+
     Template.cashiers.helpers({
 
         /**
@@ -23,11 +23,14 @@
          * @returns {*}
          */
         cashiers: function(){
-            return Session.get("cashiers");
+            return Meteor.users;
         },
 
         'isEdited': function(id) {
             return Session.get('editCashierId') == id;
+        },
+        'addCashier': function() {
+            return Session.get('newCashier');
         }
     });
 
@@ -40,6 +43,9 @@
             var cashier = findOneCashier(barcode);
             serverCall('removeCashier', cashier);
             event.preventDefault();
+        },
+        'click #addC': function(event, template) {
+            Session.set('newCashier', true);
         }
     });
 
