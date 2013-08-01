@@ -25,8 +25,7 @@
             username: '007',
             email: '007@mi5.uk',
             password: '007',
-            profile: {name: 'James Bond', barcode: '007'},
-            barcode: '007'
+            profile: {name: 'James Bond', barcode: '007'}
         });
     });
 

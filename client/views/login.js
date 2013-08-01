@@ -46,15 +46,7 @@
                 if (keyCode == 27)
                 {
                     /** ESC was pressed, log user out **/
-                    Meteor.logout(function(err){
-                        if (err) {
-                            console.log(err);
-                        }
-                        else
-                        {
-                            Session.set('isFormLogin', false);
-                        }
-                    })
+                    logout();
                     return;
                 }
                 barcode = '';
@@ -97,5 +89,25 @@
            event.preventDefault();
        }
     });
+
+
+    Template.index.events({
+        'click #logOutBtn': function(event, template) {
+            logout();
+            event.preventDefault();
+        }
+    });
+
+    function logout() {
+        Meteor.logout(function(err){
+            if (err) {
+                console.log(err);
+            }
+            else
+            {
+                Session.set('isFormLogin', false);
+            }
+        });
+    }
 
 }(Meteor));

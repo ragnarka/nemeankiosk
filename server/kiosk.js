@@ -58,16 +58,8 @@
             */
         },
 
-        addCashier: function(cashier) {
-
-        },
-
         addProduct: function(product) {
             Products.insert(product);
-        },
-
-        removeCashier: function(cashier) {
-
         },
 
         removeProduct: function(product) {

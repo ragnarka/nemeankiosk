@@ -38,4 +38,21 @@
         return {id: userId, token: stampedToken.token};
     });
 
+    Meteor.users.allow({
+        /** Let users delete accounts
+         *  Modify later so that only Superbruker can delete
+         * **/
+        update: function (userId, doc) {
+            // Add check for user is in role Superbruker
+            return true;
+        },
+        /** Let users delete accounts
+         *  Modify later so that only Superbruker can delete
+         * **/
+        remove: function (userId, doc) {
+            // Add check for user is in role Superbruker
+            return true;
+        }
+    });
+
 }(Meteor));

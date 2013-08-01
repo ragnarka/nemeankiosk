@@ -7,100 +7,147 @@
  */
 (function (Meteor) {
 
-
     Template.cashiers.helpers({
-
-        /**
-         * Fetch one cashier
-         * @returns {*}
-         */
-        cashier: function() {
-            //return Cashiers.findOne(Session.get('selectedCashierId'));
-        },
-
         /**
          * Fetch all cashiers
          * @returns {*}
          */
         cashiers: function(){
-            return Meteor.users;
+            return Meteor.users.find().fetch();
         },
 
+        /** Decides wheter to show edit or display row **/
         'isEdited': function(id) {
-            return Session.get('editCashierId') == id;
+            return (Session.get('editCashierId') == id);
         },
+
+        /** Decides whether to show add cashier form or not **/
         'addCashier': function() {
             return Session.get('newCashier');
         }
     });
 
     Template.cashiers.events({
+        /** Set cashier row to edit mode **/
         'dblclick tr': function(event, template) {
             Session.set('editCashierId', event.currentTarget.getAttribute('id'));
         },
+
+        /** Delete a cashier **/
         'click a.delete': function(event, template) {
-            var barcode = event.currentTarget.getAttribute('id');
-            var cashier = findOneCashier(barcode);
-            serverCall('removeCashier', cashier);
+            var id = event.currentTarget.getAttribute('id');
+            if (id == Meteor.userId())
+            {
+                alert('Du prøver å slette deg selv!');
+            }
+            else
+            {
+                Meteor.users.remove(id);
+            }
             event.preventDefault();
         },
+
+        /** View add cashier form **/
         'click #addC': function(event, template) {
             Session.set('newCashier', true);
+        },
+
+        /** Hide add cashier form **/
+        'click #cancelAddCashier': function(event, template) {
+            Session.set('newCashier', false);
+        },
+
+        /** Update cashier field **/
+        'blur input': function(event, template) {
+            var elm = event.currentTarget;
+            var id = elm.parentNode.parentNode.getAttribute('id');
+            var field = elm.getAttribute('name');
+            var value = elm.value;
+            if (value != '')
+            {
+                updateCashier(id, field, value);
+            }
         }
     });
 
     Template.addCashier.events({
+        /**
+         * Adds a new cashier
+         *
+         * @param event
+         * @param template
+         */
         'submit': function(event, template) {
-            formData = {name : cName.value, strekkode : strekkode.value};
-           serverCall('addCashier', formData, function() {
-                Meteor.Router.to('/cashiers');
-            });
+            formData = {
+                name : cName.value,
+                barcode : barcode.value,
+                username : username.value,
+                password : password.value
+            };
+            var existsCashier = existsCashier(formData.barcode, formData.username);
+            if (!existsCashier)
+            {
+                var options = {
+                    username : formData.username,
+                    email : formData.email,
+                    password : formData.password,
+                    profile : {
+                        name : formData.name,
+                        barcode : formData.barcode
+                    }
+                };
+                Accounts.createUser(options);
+                Session.set('newCashier', false);
+            }
+            else
+            {
+                console.log('User already exists!');
+            }
             event.preventDefault();
         }
     });
 
-
     /**
-     * findOneCashier
+     * existsCashier
      *
-     * Fetch one cashier from the Cashier collection
+     * Check whether one cashier exists
+     *
      * @param barcode
-     * @returns {*}
+     * @param username
+     * @returns {boolean}
      */
-    function findOneCashier(barcode) {
-        var cashier = _.find(Session.get('cashiers'), function(cashier) {
-            if (cashier.strekkode == barcode) { return cashier; }
-        });
-        return cashier;
+    function existsCashier(barcode, username) {
+        var isBarcode = (Meteor.users.findOne({"profile.barcode":barcode}) == null) ? false : true;
+        var isUsername = (Meteor.users.findOne({username: username}) == null) ? false : true;
+        var retVal = (isBarcode || isUsername);
+        return retVal;
     }
 
     /**
-     * serverCall
+     * findCashierById
      *
-     * Perform operations on Cashiers collection on server.
+     * Find one cashier
      *
-     * @param method
-     * @param data
-     * @param callback
+     * @param id
+     * @returns Meteor.user
      */
-    function serverCall(method, data, callback) {
-        Meteor.call(method, data, function(errors, result) {
-            refresh();
-            if (_.isFunction(callback))
-            {
-                callback();
-            }
-        });
+    function findCashierById(id) {
+        return Meteor.users.findOne({_id : id});
     }
 
     /**
-     * refresh
+     * updateCashier
      *
-     * Get Cashiers collection from server and update client.
+     * Update one field in a cahsiers document
+     *
+     * @param id
+     * @param field
+     * @param value
      */
-    function refresh() {
-        Meteor.call('getCashiers', function(errors, result) {
-            Session.set('cashiers', result);
-        });
+    function updateCashier(id, field, value) {
+        var data = {};
+        data[field] = value;
+        Meteor.users.update({_id:id}, {$set:data});
     }
+
 }(Meteor));
