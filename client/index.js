@@ -1,12 +1,7 @@
-
-
 (function (Meteor) {
 	
 	Meteor.startup(function() {
-        Session.set("cashiers");
 		console.log("Nemean Kiosk is running at client!");
-        Meteor.subscribe("cashiers", Session.get("cashiers"));
-        loadCashiers();
 	});
 
 	Meteor.Router.add({
@@ -20,25 +15,11 @@
 	});
 
     /**
-     * Fetch all cashiers
+     * Name of logged in user to be displayed in view
      * @returns {*}
      */
-    loadCashiers = function(){
-        Meteor.call('getCashiers', function(errors, result) {
-            Session.set('cashiers', result);
-        });
-    }
-
-    Template.index.loggedIn = function() {
-        return Session.get('loggedIn');
-    }
-
     Template.index.displayName = function() {
-        return Meteor.user()._id;
-    }
-
-    Template.index.rendered = function() {
-        loadCashiers();
+       return (Meteor.userId() && Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.name : '';
     }
 
 }(Meteor));

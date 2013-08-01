@@ -17,7 +17,7 @@
 <template name="index">
     <h1>Nemean Kiosk</h1>
     {{#if currentUser}}
-        <span style="float: right;">Innlogget som <b>{{displayName}}</b></span>
+        <span style="float: right;"><b>{{displayName}}</b></span>
         {{>menu}}
     {{/if}}
     <div class="well">
@@ -29,6 +29,7 @@
     </div>
 </template>
 
+<!-- Frontpage when logged in (Defined in the routes in index.js -->
 <template name="start">
     Velkommen til verdens første og beste meteorkiosk!
 </template>
