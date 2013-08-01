@@ -1,14 +1,23 @@
 
 (function (Meteor) {
 
-    //Insert code here
-    Template.products.helpers({
 
-        products: function(){
-            Meteor.call('getProducts', function(errors, result) {
-                Session.set('products', result);
-            });
-            return Session.get("products");
-        }
-    });
+    //Get list of all products
+    function getProducts() {
+        var products = Session.get("products");
+        return products;
+    }
+
+    //Function runs everytime page renders
+    Template.products.rendered = function (){
+        getProducts();
+        Session.set('addProduct', false);
+    };
+
+    // Sets variable wether to add product or not
+    Template.products.addProduct = function() {
+        var addP = Session.get('addProduct');
+        return addP;
+    }
+
 }(Meteor));

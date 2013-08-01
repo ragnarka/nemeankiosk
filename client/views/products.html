@@ -1,9 +1,42 @@
 <template name="products">
     <h2>Vareliste</h2>
     <div id="products">
-        {{#each products}}
-        <h4>{{name}} - {{pris}}</h4>
-        {{/each}}
+        <a class="btn btn-default">Legg til produkt</a>
+        
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <td> Navn</td>
+                    <td> Strekkode</td>
+                    <td> Pris</td>
+                </tr>
+            </thead>
+            {{#if addProduct}}
+            {{>addProduct}}
+            {{/if}}
+            {{#each products}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{strekkode}}</td>
+                <td>{{pris}}</td>
+                <td><a class="btn btn-default">Legg til</a></td>
+            </tr>
+            {{/each}}
+        </table>
     </div>
 
+</template>
+
+<template name="addProduct">
+        <tr id="newProduct">
+            <td>
+            <input placeholder="Navn..">
+            </input></td>
+            <td>
+            <input placeholder="Strekkode..">
+            </input></td>
+            <td>
+            <input placeholder="Pris..">
+            </input></td>
+        </tr>
 </template>

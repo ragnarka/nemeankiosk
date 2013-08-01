@@ -1,6 +1,5 @@
 (function (Meteor, $) {
 
-    //Insert code here
     var barcode ="",
         ENTER = 13;
 
@@ -14,12 +13,12 @@
                 
                 if(findProduct(barcode)){  // === PRODUCT_BARCODE
                 // Add product to basket here!
-                    barcode = "";
+                    resetBarcode();
                 }
 
                 if(findCashier(barcode))  // === CASHIER_BARCODE
                 // Make sale for Cashier
-                    barcode = "";
+                    resetBarcode();
                 }
             });
     }
@@ -30,6 +29,10 @@
 
     function findCashier(barcode) {
         return null;
+    }
+    
+    function resetBarcode() {
+        barcode = "";
     }
 
     Template.cart.rendered = function () {
