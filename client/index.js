@@ -22,4 +22,13 @@
        return (Meteor.userId() && Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.name : '';
     }
 
+    /**
+     * Are the logged in user a superuser?
+     * @returns {Boolean}
+     */
+    Template.index.isSuperuser = function() {
+        return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
+    }
+
+
 }(Meteor));

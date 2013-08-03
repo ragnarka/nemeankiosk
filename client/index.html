@@ -24,6 +24,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
+                {{#if isSuperuser}}
+                <li><a href="">Adminlink</a></li>
+                {{/if}}
                 <li><a href="#">Innstillinger</a></li>
                 <li class="divider"></li>
                 <li><a id="logOutBtn" href="#">Logg ut <i>(ESC)</i></a></li>
