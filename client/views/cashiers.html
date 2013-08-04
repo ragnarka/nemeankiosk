@@ -1,9 +1,98 @@
 <template name="cashiers">
-    <h1>Selgere</h1>
-    <div id="cashiers">
-        {{#each cashiers}}
-        <h4>{{name}}</h4>
-        {{/each}}
+    <h3>Selgere</h3>
+    {{#if isSuperuser}}
+        {{#if addCashier}}
+            {{>addCashier}}
+        {{else}}
+            <a id="addC" class="btn btn-default" title="Legg til ny selger"><i class="icon-plus"></i></a>
+            <a id="importC" class="btn btn-default">Importer</a>
+        {{/if}}
+    {{/if}}
+    <div>
+        <table class="table table-hover">
+            <thead>
+                <th>Navn</th>
+                <th>Strekkode</th>
+                <th>Brukernavn</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {{#each cashiers}}
+                    {{#if isEdited _id}}
+                        {{>editCashier}}
+                    {{else}}
+                        {{>displayCashier}}
+                    {{/if}}
+                {{/each}}
+            </tbody>
+        </table>
     </div>
+</template>
 
+
+<!-- Add cashier -->
+<template name="addCashier">
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label for="cName" class="col-lg-2 control-label">Navn</label>
+            <div class="col-lg-10 controls">
+                <input id="cName" name="cName" type="text" class="form-control" placeholder="Navn..." autofocus="autofocus" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="barcode" class="col-lg-2 control-label">Strekkode</label>
+            <div class="col-lg-10 controls">
+                <input id="barcode" name="barcode" type="text" class="form-control" placeholder="Strekkode..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="email" class="col-lg-2 control-label">E-post</label>
+            <div class="col-lg-10 controls">
+                <input id="email" name="email" type="text" class="form-control" placeholder="E-post..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="username" class="col-lg-2 control-label">Brukernavn</label>
+            <div class="col-lg-10 controls">
+                <input id="username" name="username" type="text" class="form-control" placeholder="Brukernavn..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="password" class="col-lg-2 control-label">Passord</label>
+            <div class="col-lg-10 controls">
+                <input id="password" name="password" type="password" class="form-control" placeholder="Passord..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="col-lg-2 control-label">&nbsp;</label>
+            <div class="col-lg-10 controls">
+                <button class="btn btn-default" type="submit">Lagre</button>
+                <button id="cancelAddCashier" class="btn btn-default" type="button">Avbryt</button>
+            </div>
+        </div>
+    </form>
+</template>
+
+<!-- Normal table row -->
+<template name="displayCashier">
+    <tr id="{{_id}}">
+        <td>{{profile.name}} - <i>{{roles}}</i></td>
+        <td>{{profile.barcode}}</td>
+        <td>{{username}}</td>
+        <td>
+            {{#if isSuperuser}}
+                <a id="{{_id}}" class="btn btn-default delete">Slett</a>
+            {{/if}}
+        </td>
+    </tr>
+</template>
+
+<!-- Table row in edit mode -->
+<template name="editCashier">
+    <tr id="{{_id}}">
+        <td><input id="" name="profile.name" type="text" value="{{profile.name}}" class="span3" autofocus="autofocus" /></td>
+        <td><input name="profile.barcode" type="text" value="{{profile.barcode}}" class="span3" /></td>
+        <td><input name="username" type="text" value="{{username}}" class="span3" /></td>
+        <td></td>
+    </tr>
 </template>
