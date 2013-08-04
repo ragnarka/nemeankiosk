@@ -1,11 +1,16 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: Ragnar
- * Date: 6/9/13
- * Time: 2:06 PM
- * To change this template use File | Settings | File Templates.
- */
 (function (Meteor) {
+
+    /**
+     * Are the logged in user a superuser?
+     * @returns {Boolean}
+     */
+    Template.cashiers.isSuperuser = function() {
+        return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
+    }
+
+    Template.displayCashier.isSuperuser = function() {
+        return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
+    }
 
     Template.cashiers.helpers({
         /**
@@ -84,8 +89,12 @@
                 username : username.value,
                 password : password.value
             };
-            var existsCashier = existsCashier(formData.barcode, formData.username);
-            if (!existsCashier)
+
+            /** Validation to be added **/
+
+            var exists = existsCashier(formData.barcode, formData.username);
+
+            if (!exists)
             {
                 var options = {
                     username : formData.username,
@@ -96,7 +105,16 @@
                         barcode : formData.barcode
                     }
                 };
-                Accounts.createUser(options);
+                Meteor.call('newAccount', options, function(err) {
+                    if (err)
+                    {
+                        console.log(err);
+                    }
+                    else
+                    {
+                        console.log('User created');
+                    }
+                });
                 Session.set('newCashier', false);
             }
             else
@@ -106,6 +124,13 @@
             event.preventDefault();
         }
     });
+
+
+
+
+/**********************************************************************************************************************
+ * Custom helper methods
+ *********************************************************************************************************************/
 
     /**
      * existsCashier
@@ -117,7 +142,9 @@
      * @returns {boolean}
      */
     function existsCashier(barcode, username) {
+        console.log('2.1');
         var isBarcode = (Meteor.users.findOne({"profile.barcode":barcode}) == null) ? false : true;
+        console.log('2.2');
         var isUsername = (Meteor.users.findOne({username: username}) == null) ? false : true;
         var retVal = (isBarcode || isUsername);
         return retVal;
@@ -148,6 +175,22 @@
         var data = {};
         data[field] = value;
         Meteor.users.update({_id:id}, {$set:data});
+    }
+
+    /** TODO: Complete this method **/
+    function validate(options)
+    {
+        if (!_.isArray(options))
+        {
+            return false;
+        }
+
+        _.each(options, function(elm){
+           if (_.isEmpty(elm)) {
+               return false;
+           }
+        });
+        return true;
     }
 
 }(Meteor));

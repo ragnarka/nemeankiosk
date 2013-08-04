@@ -2,7 +2,7 @@
 
 /**********************************************************************************************************************
  * Meteor startup method
- */
+ *********************************************************************************************************************/
     Meteor.startup(function(){
         if (Meteor.users.find().fetch().length === 0)
         {
@@ -13,7 +13,7 @@
                 profile: {name: 'James Bond', barcode: '007'}
             });
             console.log(id);
-            Roles.addUsersToRoles(id, ['Superbruker']);
+            Roles.addUsersToRoles(id, ['Superbruker', 'Selger']);
         }
 
         /**
@@ -31,46 +31,96 @@
     });
 
 
+
+
 /**********************************************************************************************************************
  * Meteor publish
- */
+ *********************************************************************************************************************/
+    /**
+     * Only Superbruker needs to see all users
+     */
     Meteor.publish("users", function(){
-        return Meteor.users.find();
-    });
-
-    Meteor.users.allow({
-        /** Let users delete accounts
-         *  Modify later so that only Superbruker can delete
-         * **/
-        update: function (userId, doc) {
-            // Add check for user is in role Superbruker
-            return true;
-        },
-        /** Let users delete accounts
-         *  Modify later so that only Superbruker can delete
-         * **/
-        remove: function (userId, doc) {
-            // Add check for user is in role Superbruker
-            return true;
+        var loggedInUser = Meteor.users.findOne({_id: this.userId});
+        if (Roles.userIsInRole(loggedInUser, ['Superbruker']))
+        {
+            return Meteor.users.find({});
         }
     });
 
+
+
+
+/**********************************************************************************************************************
+ * Meteor methods
+ *********************************************************************************************************************/
+
+    Meteor.methods({
+        /**
+         * newAccount
+         *
+         * Client calls this method remotely to add a new user account
+         *
+         * @param options
+         */
+        'newAccount': function(options) {
+            createNewAccount(options);
+        }
+    });
+
+    Meteor.users.allow({
+        /**
+         * Let Superbruker update accounts, and the current logged in user can update on his account
+         */
+        update: function (userId, doc) {
+            var loggedInUser = Meteor.users.findOne({_id: userId});
+            if (Roles.userIsInRole(loggedInUser, ['Superbruker']))
+            {
+                console.log('Oppdaterer');
+                return true;
+            }
+            console.log('Ikke tillatelse til å oppdatere');
+        },
+
+        /**
+         * Let Superbruker delete accounts
+         */
+        remove: function (userId, doc) {
+            var loggedInUser = Meteor.users.findOne({_id: userId});
+            if (Roles.userIsInRole(loggedInUser, ['Superbruker']))
+            {
+                return true;
+            }
+            console.log('Ikke tillatelse til å utføre operasjon');
+        }
+    });
+
+
+
+
+/**********************************************************************************************************************
+ * Custom helper methods
+ *********************************************************************************************************************/
+
     /**
-     * Benyttes hvis man vil hente inn info fra ekstern tjeneste når en
-     * bruker opprettes. F.eks: Facebook info.
+     * createNewAccount
+     *
+     * Creates a new user account with a preset role 'Selger'
+     *
+     * @param options
      */
-    /**Accounts.onCreateUser(function(options,user){
+    function createNewAccount(options)
+    {
+        var id = Accounts.createUser(options);
+        console.log('User created with id: ' + id);
+        Roles.addUsersToRoles(id, ['Selger']);
+    }
 
-        //user.profile = {name: 'James Bond'};
-
-        return user;
-    });**/
 
 
 
 /**********************************************************************************************************************
  * Custom made login
- */
+ *********************************************************************************************************************/
 
     /**
      * Customized login method
