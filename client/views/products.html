@@ -2,13 +2,14 @@
     <h2>Vareliste</h2>
     <div id="products">
         <a class="btn btn-default">Legg til produkt</a>
-        
+
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <td> Navn</td>
                     <td> Strekkode</td>
                     <td> Pris</td>
+                    <td></td>
                 </tr>
             </thead>
             {{#if addProduct}}
@@ -28,15 +29,16 @@
 </template>
 
 <template name="addProduct">
-        <tr id="newProduct">
-            <td>
-            <input placeholder="Navn..">
-            </input></td>
-            <td>
-            <input placeholder="Strekkode..">
-            </input></td>
-            <td>
-            <input placeholder="Pris..">
-            </input></td>
-        </tr>
+    <tr id="newProduct">
+        <td>
+        <input id="name" type="text" placeholder="Navn..">
+        </input></td>
+        <td>
+        <input id="barcode" type="text" placeholder="Strekkode..">
+        </input></td>
+        <td>
+        <input id="price" type="text" placeholder="Pris..">
+        </input></td>
+        <td></td>
+    </tr>
 </template>
