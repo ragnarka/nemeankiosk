@@ -1,23 +1,26 @@
 
 (function (Meteor) {
 
+    var collection = new Meteor.Collection("products");
 
     //Get list of all products
-    function getProducts() {
-        var products = Session.get("products");
+    function findProducts() {
+        Meteor.subscribe("products");
+        var products = collection;
         return products;
     }
 
     //Function runs everytime page renders
     Template.products.rendered = function (){
-        getProducts();
-        Session.set('addProduct', false);
-    };
+        findProducts();
+    }
 
     // Sets variable wether to add product or not
     Template.products.addProduct = function() {
-        var addP = Session.get('addProduct');
-        return addP;
+        return true;
     }
 
+    Template.products.products = function() {
+        return collection.find().fetch();
+    }
 }(Meteor));

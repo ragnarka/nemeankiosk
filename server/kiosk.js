@@ -1,71 +1,35 @@
 /*global Meteor, Accounts, console*/
+
 (function (Meteor, _) {
 
-
-    /** Metode 2 - Andre forsøk -------------------*/
+    // 
     Meteor.startup(function() {
         console.log("Nemean Kiosk is running at server!");
         Products = new Meteor.Collection("products");
+        importProducts();
+        console.log("Have fun!");
+        console.log("-------------------------------------------");
     });
 
-    Meteor.methods({
-        getCashiers: function () {
-
-        },
-
-         getProducts: function () {
-            return Products.find().fetch();
-        },
-
-        updateCashiers: function() {
-            /*
-            //Cashiers.remove({});
-            console.log('Updating cashiers');
-            var JSONstring = Meteor.http.get("http://nemean.no/mTest.html");
-            var users = JSON.parse(JSONstring.content);
-            _.each(users, function (user) {
-                if (!Cashiers.findOne({strekkode:user.strekkode}))
-                {
-                   // Cashiers.insert(user);
-                    Accounts.createUser({
-                        email:user.name,
-                        password: user.strekkode,
-                        profile: {name: user.name}
-                    });
-                    Meteor.users.insert({email: user.name, password: user.strekkode}, function(err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        else
-                        {
-                            console.log('User created');
-                        }
-                    });
-                }
-            });
-            */
-        },
-
-        updateProducts: function() {
-            /*
+// Function imports external products
+    function importProducts() {
             Products.remove({});
-            console.log('Updating products');
             var JSONstring = Meteor.http.get("http://nemean.no/products.html");
-            var products = JSON.parse(JSONstring.content);
-            _.each(products, function (product) {
+            var newProducts = JSON.parse(JSONstring.content);
+            _.each(newProducts, function (product) {
                 Products.insert(product);
             });
-            */
-        },
-
-        addProduct: function(product) {
-            Products.insert(product);
-        },
-
-        removeProduct: function(product) {
-
+            console.log("External products imported");
         }
 
+// Publishes product collection
+    Meteor.publish("products", function() {
+        return Products.find({});
+    });
+
+// Publishes cashier collection
+    Meteor.publish("cashiers", function() {
+        return Cashiers.find({});
     });
 
 }(Meteor, _));
