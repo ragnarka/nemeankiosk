@@ -1,7 +1,11 @@
 <template name="products">
     <h2>Vareliste</h2>
     <div id="products">
-        <a class="btn btn-default">Legg til produkt</a>
+        <a class="btn btn-default add">Legg til produkt</a>
+        
+        {{#if addProduct}}
+            {{>addProduct}}
+            {{/if}}
 
         <table class="table table-striped table-hover">
             <thead>
@@ -12,9 +16,7 @@
                     <td></td>
                 </tr>
             </thead>
-            {{#if addProduct}}
-            {{>addProduct}}
-            {{/if}}
+            
             {{#each products}}
             <tr>
                 <td>{{name}}</td>
@@ -29,16 +31,20 @@
 </template>
 
 <template name="addProduct">
-    <tr id="newProduct">
-        <td>
+    <div id="newProduct">
         <input id="name" type="text" placeholder="Navn..">
-        </input></td>
-        <td>
+        </input>
         <input id="barcode" type="text" placeholder="Strekkode..">
-        </input></td>
-        <td>
+        </input>
         <input id="price" type="text" placeholder="Pris..">
-        </input></td>
-        <td></td>
-    </tr>
+        </input>
+
+        <input id="purchasePrice" type="text" placeholder="Innkjøpspris..">
+        </input>
+        <input id="inStock" type="text" placeholder="Antall på lager..">
+        </input>
+
+        <input id="quantity" type="text" placeholder="Antall totalt..">
+        </input>
+        <a class="btn btn-default newProduct">Legg til</a>
 </template>
