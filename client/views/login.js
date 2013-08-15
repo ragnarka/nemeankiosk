@@ -9,6 +9,10 @@
 
     var barcode = '';   /** Make sure barcode is an empty string **/
 
+    if (Accounts._resetPasswordToken) {
+        Session.set('isResetPassword', Accounts._resetPasswordToken);
+    }
+
     /**
      * login
      *
@@ -54,50 +58,165 @@
         });
     });
 
-    /**
-     * Decides whether to show login form or not
-     *
-     * @returns boolean
-     */
-    Template.login.oldSchoolLogin = function() {
-        return Session.get('isFormLogin');
-    }
+    Template.login.helpers({
+        /** Decided whether to show reset password form or not **/
+        'isResetPassword': function() {
+            return Session.get('isResetPassword');
+        },
 
+        /**
+         * Decides whether to show login form or not
+         *
+         * @returns boolean
+         */
+        'oldSchoolLogin': function() {
+            return Session.get('isFormLogin');
+        },
+
+        /**
+         * Decides whether to show forgot password form or not
+         *
+         * @returns boolean
+         */
+        'forgotPassword': function() {
+            return Session.get('isForgotPassword');
+        },
+
+        /** Decided whether to show a displayMessage **/
+        'displayMessage': function() {
+            return Session.get('displayMessage');
+        },
+
+        /** Type of displayMessage **/
+        'type': function() {
+            return Session.get('type');
+        },
+
+        /** Message of displayMessage **/
+        'message': function() {
+            return Session.get('message');
+        },
+
+        /** Title of displayMessage **/
+        'title': function() {
+            return Session.get('title');
+        }
+    });
 
     Template.login.events({
+        /** Show oldSchool login form **/
        'click #logInBtn': function(event, template) {
            Session.set('isFormLogin', true);
        },
 
+        /** Hide displayMessage from view **/
+        'click .close': function(event, template) {
+            removeNotice();
+        }
+    });
+
+
+    Template.oldSchoolLogin.events({
+        /** Show forgotten password form **/
+        'click #forgotPasswordBtn': function(event, template) {
+            event.preventDefault();
+            Session.set('isForgotPassword', true);
+            Session.set('isFormLogin', false);
+        },
+
         /**
          * Triggers when enter is pushed in login form
+         *
+         * An attempt to login the user is made.
          *
          * @param event
          * @param template
          */
-       'submit': function(event, template) {
-           var formData = {username: username.value, password: password.value};
-           Meteor.loginWithPassword(formData.username, formData.password, function(err) {
-               if (err) {
-                   console.log(err);
-               }
-               else
-               {
-                   Session.set('isFormLogin', false);
-               }
-           });
+        'submit': function(event, template) {
+            event.preventDefault();
+            var formData = {username: username.value, password: password.value};
+            console.log(formData);
+            Meteor.loginWithPassword(formData.username, formData.password, function(err) {
+                if (err) {
+                    notify('Oh snap!', err.reason, 'alert-error');
+                }
+                else
+                {
+                    Session.set('isFormLogin', false);
+                }
+            });
+        }
+    });
+
+    Template.forgotPassword.events({
+        /** User has decided not to purse forgot password - hide form **/
+        'click #cancelForgotBtn': function(event, template) {
+            event.preventDefault();
+            Session.set('isForgotPassword', false);
+        },
+
+        /**
+         * forgotPassword
+         *
+         * User requests to change password, send email with resetToken.
+         *
+         * @param event
+         * @param template
+         */
+        'submit': function(event, template) {
+            event.preventDefault();
+            var formData = {email: email.value};
+            notify('Til informasjon', 'Funksjoen kan ikke testes før en ' +
+                'eventuelt "deployer" applikasjonen', 'alert-info');
+            /*
+            Meteor.forgotPassword(formData, function(err) {
+                if (err) {
+                    console.log(err);
+                }
+                else
+                {
+                    Session.set('isForgotPassword', false);
+                }
+            });
+            */
+        }
+    });
+
+    Template.resetPassword.events({
+        /** User does not want to reset password - hide form **/
+       'click #cancelResetBtn': function(event, template) {
            event.preventDefault();
-       }
+           Session.set('isResetPassword', false);
+       },
+
+        /** TODO: Complete resetPassword method with validation++ **/
+        'submit': function(event, template) {
+            event.preventDefault();
+            Accounts.resetPassword(Session.get('isResetPassword'),
+            password.value,function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else
+                    {
+                        Session.set('resetPassword', null);
+                    }
+            });
+        }
     });
 
 
     Template.index.events({
+        /** User has clicked log out button - log user out **/
         'click #logOutBtn': function(event, template) {
             logout();
             event.preventDefault();
         }
     });
 
+    /**
+     * Log user out of the application
+     */
     function logout() {
         Meteor.logout(function(err){
             if (err) {
@@ -108,6 +227,31 @@
                 Session.set('isFormLogin', false);
             }
         });
+    }
+
+    /**
+     * Display a message to the user
+     *
+     * @param title
+     * @param message
+     * @param type
+     */
+    function notify(title, message, type)
+    {
+        Session.set('displayMessage', true);
+        Session.set('type', type);
+        Session.set('title', title);
+        Session.set('message', message);
+    }
+
+    /**
+     * Remove the displayed message
+     */
+    function removeNotice() {
+        Session.set('displayMessage', false);
+        Session.set('type', null);
+        Session.set('message', null);
+        Session.set('title', null);
     }
 
 }(Meteor));

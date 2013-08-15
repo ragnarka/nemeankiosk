@@ -1,11 +1,26 @@
 <template name="login">
-    Scan for å logge inn...
-    <br /><br />
-    {{#if oldSchoolLogin}}
-        {{>oldSchoolLogin}}
+    {{#if displayMessage}}
+        <div class="alert {{type}}">
+            <button type="button" class="close">&times;</button>
+            <h4>{{title}}</h4>
+            {{message}}
+        </div>
+    {{/if}}
+
+    {{#if isResetPassword}}
+        {{>resetPassword}}
     {{else}}
-        Eller benytt brukernavn og passord for å logge inn.
-        <a id="logInBtn" class="btn btn-default">Logg inn</a>
+        {{#if oldSchoolLogin}}
+            {{>oldSchoolLogin}}
+        {{else}}
+            {{#if forgotPassword}}
+                {{>forgotPassword}}
+            {{else}}
+                <blockquote><p>Scan for å logge inn...</p></blockquote>
+                Eller benytt brukernavn og passord for å logge inn.
+                <a id="logInBtn" class="btn btn-default">Logg inn</a>
+            {{/if}}
+        {{/if}}
     {{/if}}
 </template>
 
@@ -14,9 +29,79 @@
 
 
 <template name="oldSchoolLogin">
-    <form class="form-inline">
-        <input id="username" name="username" type="text" placeholder="Brukernavn..." autofocus="autofocus" />
-        <input id="password" name="password" type="password" placeholder="Passord" />
-        <button type="submit">Logg inn</button>
+    <h3>Innlogging</h3>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="username">Brukernavn</label>
+            <div class="controls">
+                <input id="username" name="username" type="text" placeholder="Brukernavn..." autofocus="autofocus" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="password">Passord</label>
+            <div class="controls">
+                <input id="password" name="password" type="password" placeholder="Passord" />
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+        <button type="submit" class="btn btn-primary">Logg inn</button>
+        <button id="forgotPasswordBtn" class="btn btn-default">Glemt
+            passord</button>
+            </div>
+        </div>
+    </form>
+</template>
+
+<template name="forgotPassword">
+    <h3>Glemt passord</h3>
+    <blockquote>Ved å skrive inn din e-postadresse i felted nedenfor vil
+            du motta en e-post med veledning for gjennoppretting av
+            passord.</blockquote>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="email">E-post</label>
+            <div class="controls">
+                    <input id="email" name="email" type="text" placeholder="E-post"
+               autofocus="autofocus" />
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">Send</button>
+                <button id="cancelForgotBtn" class="btn btn-default">Avbry
+                    t</button>
+            </div>
+        </div>
+    </form>
+</template>
+
+
+<template name="resetPassword">
+    <h3>Gjennopprett passord</h3>
+    <blockquote>Skriv inn nytt passord</blockquote>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="nPassword">Nytt passord</label>
+            <div class="controls">
+                <input id="nPassword" name="nPassword" type="password"
+                       placeholder="Nytt passord"
+                       autofocus="autofocus" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="gPassword">Gjenta passord</label>
+            <div class="controls">
+                <input id="gPassword" name="gPassword" type="password"
+                       placeholder="Gjenta passord" />
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">Lagre</button>
+                <button id="cancelResetBtn" class="btn btn-default">Avbry
+                    t</button>
+            </div>
+        </div>
     </form>
 </template>
