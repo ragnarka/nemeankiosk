@@ -1,8 +1,8 @@
 (function (Meteor) {
 
-/**********************************************************************************************************************
+/*******************************************************************************
  * Meteor startup method
- *********************************************************************************************************************/
+ ******************************************************************************/
     Meteor.startup(function(){
         if (Meteor.users.find().fetch().length === 0)
         {
@@ -33,9 +33,9 @@
 
 
 
-/**********************************************************************************************************************
+/*******************************************************************************
  * Meteor publish
- *********************************************************************************************************************/
+ ******************************************************************************/
     /**
      * Only Superbruker needs to see all users
      */
@@ -50,9 +50,9 @@
 
 
 
-/**********************************************************************************************************************
+/*******************************************************************************
  * Meteor methods
- *********************************************************************************************************************/
+ ******************************************************************************/
 
     Meteor.methods({
         /**
@@ -64,12 +64,44 @@
          */
         'newAccount': function(options) {
             createNewAccount(options);
+        },
+
+        'createAccountsFromImports': function(obj) {
+            _.each(obj, function(u) {
+                if (u.name && u.email && u.barcode && u.username && u.password) {
+                    var options = {
+                        username : u.username,
+                        email : u.email,
+                        password : u.password,
+                        profile : {
+                            name : u.name,
+                            barcode : u.barcode
+                        }
+                    };
+                    //var e = existsCashier(u.barcode, u.username);
+                    //console.log(e + ' ' + u.ID);
+
+                    if (!existsCashier(u.barcode, u.username, u.email))
+                    {
+                        createNewAccount(options);
+                    }
+                    else
+                    {
+                        console.log('Omitting... User with ID: ' + u.ID + ' already exists');
+                    }
+                }
+                else
+                {
+                    console.log('Invalid user data for user with ID: ' + u.ID);
+                }
+            })
         }
     });
 
     Meteor.users.allow({
         /**
-         * Let Superbruker update accounts, and the current logged in user can update on his account
+         * Let Superbruker update accounts, and the current logged in user can
+         * update on his account
          */
         update: function (userId, doc) {
             var loggedInUser = Meteor.users.findOne({_id: userId});
@@ -97,9 +129,9 @@
 
 
 
-/**********************************************************************************************************************
+/*******************************************************************************
  * Custom helper methods
- *********************************************************************************************************************/
+ ******************************************************************************/
 
     /**
      * createNewAccount
@@ -116,11 +148,29 @@
     }
 
 
+    /**
+     * existsCashier
+     *
+     * Check whether one cashier exists
+     *
+     * @param barcode
+     * @param username
+     * @returns {boolean}
+     */
+    function existsCashier(barcode, username, email) {
+        var isBarcode = (Meteor.users.findOne({"profile.barcode":barcode}) == null) ? false : true;
+        var isUsername = (Meteor.users.findOne({username: username}) == null) ? false : true;
+        var isEmail = (Meteor.users.findOne({email: email}) == null) ? false : true;
+        var retVal = (isBarcode || isUsername || isEmail);
+        return retVal;
+    }
 
 
-/**********************************************************************************************************************
+
+
+/*******************************************************************************
  * Custom made login
- *********************************************************************************************************************/
+ ******************************************************************************/
 
     /**
      * Customized login method
@@ -145,7 +195,8 @@
             console.log('User found');
         }
         var stampedToken = Accounts._generateStampedLoginToken();
-        Meteor.users.update(userId, {$push: {'services.resume.loginTokens': stampedToken}});
+        Meteor.users.update(userId,
+            {$push: {'services.resume.loginTokens': stampedToken}});
         return {id: userId, token: stampedToken.token};
     });
 
