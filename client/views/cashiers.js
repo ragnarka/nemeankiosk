@@ -274,12 +274,11 @@
         event.preventDefault();
         var fileData = event.target.result;
         var users = $.csv.toObjects(fileData);
-        var valid = {};
+        var valid = [];
         // Add valid user entries to a tmp array
         _.each(users, function(u) {
-
-           if (u.name && u.email && u.barcode && u.username && u.password) {
-               valid[u.ID] = u;
+           if (u.name && u.email && u.username && u.password) {
+               u.barcode = (u.barcode != '') ? u.barcode : '';
                if (!existsCashier(u.barcode, u.username, u.email))
                {
                     u.class = 'success';

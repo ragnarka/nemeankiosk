@@ -68,7 +68,8 @@
 
         'createAccountsFromImports': function(obj) {
             _.each(obj, function(u) {
-                if (u.name && u.email && u.barcode && u.username && u.password) {
+                if (u.name && u.email&& u.username && u.password) {
+                    u.barcode = (u.barcode != '') ? u.barcode : '';
                     var options = {
                         username : u.username,
                         email : u.email,
