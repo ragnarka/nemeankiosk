@@ -35,6 +35,13 @@
         </div>
         {{>menu}}
     {{/if}}
+    {{#if displayMessage}}
+    <div class="alert {{type}}">
+        <button type="button" class="close">&times;</button>
+        <h4>{{title}}</h4>
+        {{message}}
+    </div>
+    {{/if}}
     <div class="well">
         {{#if currentUser}}
             {{renderPage}}

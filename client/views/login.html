@@ -1,12 +1,4 @@
 <template name="login">
-    {{#if displayMessage}}
-        <div class="alert {{type}}">
-            <button type="button" class="close">&times;</button>
-            <h4>{{title}}</h4>
-            {{message}}
-        </div>
-    {{/if}}
-
     {{#if isResetPassword}}
         {{>resetPassword}}
     {{else}}

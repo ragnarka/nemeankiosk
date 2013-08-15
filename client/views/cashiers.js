@@ -83,6 +83,7 @@
          * @param template
          */
         'submit': function(event, template) {
+            event.preventDefault();
             formData = {
                 name : cName.value,
                 barcode : barcode.value,
@@ -109,19 +110,20 @@
                     if (err)
                     {
                         console.log(err);
+                        notify('Meteorfeilmelding', err.reason, 'alert-error');
                     }
                     else
                     {
-                        console.log('User created');
+                        notify('Hurra!', 'Kontoen ble opprettet!', 'alert-success');
+                        Session.set('newCashier', false);
                     }
                 });
-                Session.set('newCashier', false);
             }
             else
             {
                 console.log('User already exists!');
+                notify('Inputfeil', 'Brukeren finnes allerede', 'alert-error');
             }
-            event.preventDefault();
         }
     });
 

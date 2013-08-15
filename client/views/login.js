@@ -80,26 +80,6 @@
          */
         'forgotPassword': function() {
             return Session.get('isForgotPassword');
-        },
-
-        /** Decided whether to show a displayMessage **/
-        'displayMessage': function() {
-            return Session.get('displayMessage');
-        },
-
-        /** Type of displayMessage **/
-        'type': function() {
-            return Session.get('type');
-        },
-
-        /** Message of displayMessage **/
-        'message': function() {
-            return Session.get('message');
-        },
-
-        /** Title of displayMessage **/
-        'title': function() {
-            return Session.get('title');
         }
     });
 
@@ -107,12 +87,7 @@
         /** Show oldSchool login form **/
        'click #logInBtn': function(event, template) {
            Session.set('isFormLogin', true);
-       },
-
-        /** Hide displayMessage from view **/
-        'click .close': function(event, template) {
-            removeNotice();
-        }
+       }
     });
 
 
@@ -227,31 +202,6 @@
                 Session.set('isFormLogin', false);
             }
         });
-    }
-
-    /**
-     * Display a message to the user
-     *
-     * @param title
-     * @param message
-     * @param type
-     */
-    function notify(title, message, type)
-    {
-        Session.set('displayMessage', true);
-        Session.set('type', type);
-        Session.set('title', title);
-        Session.set('message', message);
-    }
-
-    /**
-     * Remove the displayed message
-     */
-    function removeNotice() {
-        Session.set('displayMessage', false);
-        Session.set('type', null);
-        Session.set('message', null);
-        Session.set('title', null);
     }
 
 }(Meteor));
