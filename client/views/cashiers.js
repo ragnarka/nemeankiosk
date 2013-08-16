@@ -102,6 +102,7 @@
          * @param template
          */
         'submit': function(event, template) {
+            event.preventDefault();
             formData = {
                 name : cName.value,
                 barcode : barcode.value,
@@ -134,15 +135,15 @@
                     else
                     {
                         console.log('User created');
+                        Session.set('newCashier', false);
+                        Session.set('hideMenu', false);
                     }
                 });
-                Session.set('newCashier', false);
             }
             else
             {
                 console.log('User already exists!');
             }
-            event.preventDefault();
         }
     });
 
