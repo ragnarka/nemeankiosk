@@ -1,15 +1,24 @@
 <template name="cashiers">
     <h3>Selgere</h3>
     {{#if isSuperuser}}
+
         {{#if addCashier}}
             {{>addCashier}}
-        {{else}}
-            <a id="addC" class="btn btn-default" title="Legg til ny selger"><i class="icon-plus"></i></a>
-            <a id="importC" class="btn btn-default">Importer</a>
+        {{/if}}
+
+        {{#if importCashiers}}
+            {{>importCashiers}}
+        {{/if}}
+
+        {{#if displayMenu}}
+            <a id="addC" class="btn btn-default" title="Legg til ny selger">
+                <i class="icon-plus"></i>
+            </a>
+            <a id="importCashiersBtn" class="btn btn-default">Importer</a>
         {{/if}}
     {{/if}}
     <div>
-        <table class="table table-hover">
+        <table class="table table-hover" id="tblCashiers">
             <thead>
                 <th>Navn</th>
                 <th>Strekkode</th>
@@ -95,4 +104,61 @@
         <td><input name="username" type="text" value="{{username}}" class="span3" /></td>
         <td></td>
     </tr>
+</template>
+
+
+<!-- Import accounts -->
+<template name="importCashiers">
+    <input name="file" id="file" type="file" class="form-control" />
+    <button id="cancelImportCashiersBtn" class="btn btn-default">
+        Avbryt
+    </button>
+    <button id="saveAccountsBtn" class="btn btn-default">
+        Lagre
+    </button>
+    <output id="fileView"></output>
+
+    {{#if isWarning}}
+    <div class="alert alert-error">
+        <strong>Oh snap!</strong>
+        En eller flere oppføringer er ikke fullstendige. Ved å trykke lagre
+        så blir kun de oppføringene som er farget grønt bli lagret.
+    </div>
+    {{/if}}
+
+    <table class="table table-hover">
+        <thead>
+            <th>ID</th>
+            <th>name</th>
+            <th>email</th>
+            <th>barcode</th>
+            <th>username</th>
+            <th>password</th>
+            <th></th>
+        </thead>
+        <tbody>
+        {{#each users}}
+            <tr id="{{ID}}" class="{{class}}">
+                <td>{{ID}}</td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+                <td>{{barcode}}</td>
+                <td>{{username}}</td>
+                <td>{{password}}</td>
+                <td>
+                    {{#if ok}}
+                    <span class="label label-success pull-right">
+                        <i class="icon-ok icon-white"></i>
+                    </span>
+                    {{else}}
+                    <span class="label label-important pull-right">
+                        {{error}}
+                    </span>
+                    {{/if}}
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
 </template>

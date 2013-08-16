@@ -23,7 +23,9 @@ var notify, removeNotice;
          * @returns {*}
          */
         'displayName': function() {
-            return (Meteor.userId() && Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.name : '';
+            return (Meteor.userId() && Meteor.user() && Meteor.user().profile)
+                ? Meteor.user().profile.name
+                : '';
         },
 
         /**
