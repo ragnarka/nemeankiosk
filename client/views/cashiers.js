@@ -1,9 +1,5 @@
 (function (Meteor, _) {
 
-
-
-
-
     Template.displayCashier.isSuperuser = function() {
         return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
     }
