@@ -1,11 +1,13 @@
 <template name="products">
     <h2>Vareliste</h2>
     <div id="products">
-        <a class="btn btn-default add">Legg til produkt</a>
-        
+
         {{#if addProduct}}
-            {{>addProduct}}
-            {{/if}}
+        {{>addProduct}}
+        {{else}}
+        <a class="add btn btn-default" title="Legg til produkt"><i class="icon-plus"></i></a>
+        <a class="btn btn-default import">Importer</a>
+        {{/if}}
 
         <table class="table table-striped table-hover">
             <thead>
@@ -13,15 +15,18 @@
                     <td> Navn</td>
                     <td> Strekkode</td>
                     <td> Pris</td>
-                    <td></td>
+                    <td> Innkjøpspris</td>
+                    <td> Antall</td>
                 </tr>
             </thead>
-            
+
             {{#each products}}
             <tr>
                 <td>{{name}}</td>
-                <td>{{strekkode}}</td>
-                <td>{{pris}}</td>
+                <td>{{barcode}}</td>
+                <td>{{#if price}}{{price}},- {{else}} 0,- {{/if}}</td>
+                <td>{{#if purchasePrice}}{{purchasePrice}},- {{else}} 0,- {{/if}}</td>
+                <td>{{#if amount}} {{amount}} {{else}} 0 {{/if}}</td>
                 <td><a class="btn btn-default">Legg til</a></td>
             </tr>
             {{/each}}
@@ -31,20 +36,43 @@
 </template>
 
 <template name="addProduct">
-    <div id="newProduct">
-        <input id="name" type="text" placeholder="Navn..">
-        </input>
-        <input id="barcode" type="text" placeholder="Strekkode..">
-        </input>
-        <input id="price" type="text" placeholder="Pris..">
-        </input>
-
-        <input id="purchasePrice" type="text" placeholder="Innkjøpspris..">
-        </input>
-        <input id="inStock" type="text" placeholder="Antall på lager..">
-        </input>
-
-        <input id="quantity" type="text" placeholder="Antall totalt..">
-        </input>
-        <a class="btn btn-default newProduct">Legg til</a>
+    <div class="addProduct form-horizontal">
+        <div class="control-group">
+            <label for="name" class="col-lg-2 control-label">Navn</label>
+            <div class="col-lg-10 controls">
+                <input id="name" name="name" type="text" class="form-control" placeholder="Navn..." autofocus="autofocus" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="barcode" class="col-lg-2 control-label">Strekkode</label>
+            <div class="col-lg-10 controls">
+                <input id="barcode" name="barcode" type="text" class="form-control" placeholder="Strekkode..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="price" class="col-lg-2 control-label">Pris</label>
+            <div class="col-lg-10 controls">
+                <input id="price" name="price" type="text" class="form-control" placeholder="Pris..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="purchasePrice" class="col-lg-2 control-label">Innkjøpspris</label>
+            <div class="col-lg-10 controls">
+                <input id="purchasePrice" name="purchasePrice" type="text" class="form-control" placeholder="Innkjøpspris..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label for="amount" class="col-lg-2 control-label">Antall</label>
+            <div class="col-lg-10 controls">
+                <input id="amount" name="amount" type="text" class="form-control" placeholder="Antall..." />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="col-lg-2 control-label">&nbsp;</label>
+            <div class="col-lg-10 controls">
+                <button class="newProduct btn btn-default" type="button">Lagre</button>
+                <button class="btn btn-default cancel" type="button">Avbryt</button>
+            </div>
+        </div>
+    </div> 
 </template>
