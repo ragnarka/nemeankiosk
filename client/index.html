@@ -6,6 +6,7 @@
     <script
         src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js">
     </script>
+    <script src="/js/jquery.csv-0.71.min.js"></script>
 </head>
 
 <body>
@@ -34,6 +35,13 @@
             </ul>
         </div>
         {{>menu}}
+    {{/if}}
+    {{#if displayMessage}}
+    <div class="alert {{type}}">
+        <button type="button" class="close">&times;</button>
+        <h4>{{title}}</h4>
+        {{message}}
+    </div>
     {{/if}}
     <div class="well">
         {{#if currentUser}}

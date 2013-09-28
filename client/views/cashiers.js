@@ -1,12 +1,4 @@
-(function (Meteor) {
-
-    /**
-     * Are the logged in user a superuser?
-     * @returns {Boolean}
-     */
-    Template.cashiers.isSuperuser = function() {
-        return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
-    }
+(function (Meteor, _) {
 
     Template.displayCashier.isSuperuser = function() {
         return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
@@ -29,6 +21,22 @@
         /** Decides whether to show add cashier form or not **/
         'addCashier': function() {
             return Session.get('newCashier');
+        },
+
+        /**
+         * Are the logged in user a superuser?
+         * @returns {Boolean}
+         */
+        'isSuperuser': function() {
+            return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
+        },
+
+        'displayMenu': function() {
+            return !(Session.get('hideMenu'));
+        },
+
+        'importCashiers': function() {
+            return Session.get('importCashiers');
         }
     });
 
@@ -55,11 +63,18 @@
         /** View add cashier form **/
         'click #addC': function(event, template) {
             Session.set('newCashier', true);
+            Session.set('hideMenu', true);
         },
 
         /** Hide add cashier form **/
         'click #cancelAddCashier': function(event, template) {
             Session.set('newCashier', false);
+            Session.set('hideMenu', false);
+        },
+
+        'click #importCashiersBtn': function(event, template) {
+            Session.set('importCashiers', true);
+            Session.set('hideMenu', true);
         },
 
         /** Update cashier field **/
@@ -83,16 +98,19 @@
          * @param template
          */
         'submit': function(event, template) {
+            event.preventDefault();
             formData = {
                 name : cName.value,
                 barcode : barcode.value,
                 username : username.value,
-                password : password.value
+                password : password.value,
+                email : email.value
             };
 
             /** Validation to be added **/
 
-            var exists = existsCashier(formData.barcode, formData.username);
+            var exists = existsCashier(formData.barcode,
+                formData.username, formData.email);
 
             if (!exists)
             {
@@ -109,28 +127,53 @@
                     if (err)
                     {
                         console.log(err);
+                        notify('Meteorfeilmelding', err.reason, 'alert-error');
                     }
                     else
                     {
-                        console.log('User created');
+                        notify('Hurra!', 'Kontoen ble opprettet!', 'alert-success');
                     }
                 });
-                Session.set('newCashier', false);
             }
             else
             {
-                console.log('User already exists!');
+                notify('Inputfeil', 'Brukeren finnes allerede', 'alert-error');
             }
-            event.preventDefault();
+        }
+    });
+
+    Template.importCashiers.rendered = function() {
+        document.getElementById('file').addEventListener('change', handleFile, false);
+    }
+
+    Template.importCashiers.helpers({
+       'users': function() {
+            return Session.get('users');
+       },
+
+        'isWarning': function() {
+            return Session.get('warning');
+        }
+    });
+
+    Template.importCashiers.events({
+        'click #saveAccountsBtn': function() {
+            createAccounts(Session.get('users'));
+        },
+
+        'click #cancelImportCashiersBtn': function() {
+            Session.set('users', {});
+            Session.set('importCashiers', false);
+            Session.set('hideMenu', false);
+            Session.set('warning', false);
         }
     });
 
 
 
-
-/**********************************************************************************************************************
+/*******************************************************************************
  * Custom helper methods
- *********************************************************************************************************************/
+ ******************************************************************************/
 
     /**
      * existsCashier
@@ -141,12 +184,11 @@
      * @param username
      * @returns {boolean}
      */
-    function existsCashier(barcode, username) {
-        console.log('2.1');
+    function existsCashier(barcode, username, email) {
         var isBarcode = (Meteor.users.findOne({"profile.barcode":barcode}) == null) ? false : true;
-        console.log('2.2');
         var isUsername = (Meteor.users.findOne({username: username}) == null) ? false : true;
-        var retVal = (isBarcode || isUsername);
+        var isEmail = (Meteor.users.findOne({email: email}) == null) ? false : true;
+        var retVal = (isBarcode || isUsername || isEmail);
         return retVal;
     }
 
@@ -193,4 +235,91 @@
         return true;
     }
 
-}(Meteor));
+
+    function handleFile(event) {
+        var f = event.target.files[0];
+        var reader = new FileReader();
+        if (f)
+        {
+            reader.readAsText(f);
+            switch (f.type) {
+                case 'application/vnd.ms-excel':
+                    reader.onload = loadedCSV;
+                    break;
+
+                default:
+                    Session.set('users', {});
+                    break;
+            }
+
+        };
+        var output = [];
+
+        output.push('<li>', f.type, '</li>');
+
+        document.getElementById('fileView').innerHTML = '<ul>' + output.join('') +
+            '</ul>';
+    }
+
+
+
+
+    function loadedCSV (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        var fileData = event.target.result;
+        var users = $.csv.toObjects(fileData);
+        var valid = [];
+        // Add valid user entries to a tmp array
+        _.each(users, function(u) {
+           if (u.name && u.email && u.username && u.password) {
+               u.barcode = (u.barcode != '') ? u.barcode : '';
+               if (!existsCashier(u.barcode, u.username, u.email))
+               {
+                    u.class = 'success';
+                   u.ok = true;
+               }
+               else
+               {
+                   u.class = 'error';
+                   u.error = 'Kontoen finnes allerede';
+               }
+           }
+            else
+           {
+               u.class = 'error';
+               u.error = 'Ufullstendig kontoinformasjon';
+           }
+        });
+
+        Session.set('users', users);
+
+        if (valid.length == users.length)
+        {
+            Session.set('warning', false);
+        }
+        else
+        {
+            Session.set('warning', true);
+        }
+
+        // createAccounts(users);
+    };
+
+    function createAccounts(users) {
+        Meteor.call('createAccountsFromImports', users, function (err) {
+            if (err)
+            {
+                console.log(err);
+            }
+            else
+            {
+                Session.set('warning', false);
+                Session.set('users', {});
+                Session.set('importCashiers', false);
+                Session.set('hideMenu', false);
+            }
+        });
+    }
+
+}(Meteor, _));
