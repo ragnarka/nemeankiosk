@@ -1,3 +1,52 @@
 <template name="cart">
     <h3>Handlekurv</h3>
+    <div id="cart">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <td> Navn</td>
+                    <td> Pris</td>
+                    <td></td>
+                </tr>
+            </thead>
+
+            {{#each cart}}
+            <tr>
+                <td>{{name}} - (x{{amount}})</td>
+                <td>{{getTotal}}</td>
+                <td>
+                <div class="btn-group pull-right">
+                    <button class="btn btn-default add">
+                        +
+                    </button>
+                    <button class="btn btn-default reduce">
+                        -
+                    </button>
+                    <button class="btn btn-default delete">
+                        x
+                    </button>
+                </div></td>
+            </tr>
+            {{/each}}
+        </table>
+        <h3>Beløp til forfall: {{total}}</h3>
+        <hr>
+        <div class="btn-group">
+            <button class="btn btn-large">
+                50,-
+            </button>
+            <button class="btn btn-large">
+                100,-
+            </button>
+            <button class="btn btn-large">
+                200,-
+            </button>
+            <button class="btn btn-large">
+                500,-
+            </button>
+        </div>
+        <button class="btn btn-primary pull-right btn-large completeOrder">
+            Fullfør salg
+            </button>
+    </div>
 </template>
