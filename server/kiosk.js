@@ -48,6 +48,11 @@
             return Products.find({});
         });
 
+        // Publishes product collection
+        Meteor.publish("orders", function() {
+            return Orders.find({});
+        });
+
         // Publishes cashier collection
         Meteor.publish("cashiers", function() {
             return Cashiers.find({});
