@@ -22,57 +22,25 @@
 
             {{#each products}}
             <tr>
+            {{#unless editProduct}}
                 <td>{{name}}</td>
                 <td>{{barcode}}</td>
                 <td>{{#if price}}{{price}},- {{else}} 0,- {{/if}}</td>
                 <td>{{#if purchasePrice}}{{purchasePrice}},- {{else}} 0,- {{/if}}</td>
                 <td>{{#if amount}} {{amount}} {{else}} 0 {{/if}}</td>
-                <td><a class="btn btn-default">Legg til</a></td>
+                <td><a class="btn btn-default delete">Slett</a></td>
+                <td><a class="btn btn-default edit">Endre</a></td>
+            {{else}}
+                <td id="name">{{name}}</td>
+                <td id="barcode">{{barcode}}</td>
+                <td><input class="span1" id="price" type="text" value="{{#if price}}{{price}} {{else}} 0 {{/if}}"></input>,-</td>
+                <td><input class="span1" id="purchasePrice" type="text" value="{{#if purchasePrice}}{{purchasePrice}} {{else}} 0 {{/if}}"></input>,-</td>
+                <td><input class="span1" id="amount" type="text" value="{{#if amount}} {{amount}} {{else}} 0 {{/if}}"></input></td>
+                <td><a class="btn btn-default save">Lagre</a></td>
+                <td></td>
+            {{/unless}}
             </tr>
             {{/each}}
         </table>
     </div>
-
-</template>
-
-<template name="addProduct">
-    <div class="addProduct form-horizontal">
-        <div class="control-group">
-            <label for="name" class="col-lg-2 control-label">Navn</label>
-            <div class="col-lg-10 controls">
-                <input id="name" name="name" type="text" class="form-control" placeholder="Navn..." autofocus="autofocus" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label for="barcode" class="col-lg-2 control-label">Strekkode</label>
-            <div class="col-lg-10 controls">
-                <input id="barcode" name="barcode" type="text" class="form-control" placeholder="Strekkode..." />
-            </div>
-        </div>
-        <div class="control-group">
-            <label for="price" class="col-lg-2 control-label">Pris</label>
-            <div class="col-lg-10 controls">
-                <input id="price" name="price" type="text" class="form-control" placeholder="Pris..." />
-            </div>
-        </div>
-        <div class="control-group">
-            <label for="purchasePrice" class="col-lg-2 control-label">Innkjøpspris</label>
-            <div class="col-lg-10 controls">
-                <input id="purchasePrice" name="purchasePrice" type="text" class="form-control" placeholder="Innkjøpspris..." />
-            </div>
-        </div>
-        <div class="control-group">
-            <label for="amount" class="col-lg-2 control-label">Antall</label>
-            <div class="col-lg-10 controls">
-                <input id="amount" name="amount" type="text" class="form-control" placeholder="Antall..." />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="col-lg-2 control-label">&nbsp;</label>
-            <div class="col-lg-10 controls">
-                <button class="newProduct btn btn-default" type="button">Lagre</button>
-                <button class="btn btn-default cancel" type="button">Avbryt</button>
-            </div>
-        </div>
-    </div> 
 </template>

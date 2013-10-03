@@ -21,8 +21,16 @@
             console.log("External products imported");
         }
 
-    function deleteProduct(product) {
-        Products.remove({barcode: product.barcode});
+    function deleteProduct(barcode) {
+        Products.remove({barcode: barcode});
+    }
+
+    function updateProduct(product) {
+        Products.update({_id: product._id}, {$set: {
+            price: product.price,
+            purchasePrice: product.purchasePrice,
+            amount: product.amount
+        }});
     }
 
     function addProduct(product) {
@@ -45,9 +53,15 @@
             addProduct(product);
         },
 
-        "deleteProduct": function(product) {
-            deleteProduct(product);
+        "deleteProduct": function(barcode) {
+            deleteProduct(barcode);
         },
+
+        "updateProduct": function(product) {
+            console.log(product);
+            updateProduct(product);
+        },
+
 
         "importProducts": function() {
             console.log("Hallas");
