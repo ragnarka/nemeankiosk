@@ -12,7 +12,7 @@ var notify, removeNotice;
         "/products": "products",
         "/cashiers": "cashiers",
         "/cashiers/add": "addCashier",
-        "/sales": "sales",
+        "/orders": "orders",
         "/stats": "stats"
 	});
 

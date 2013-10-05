@@ -6,6 +6,7 @@
         Meteor.startup(function() {
             console.log("Nemean Kiosk is running at server!");
             Products = new Meteor.Collection("products");
+            Orders = new Meteor.Collection("orders");   
             console.log("Have fun!");
             console.log("-------------------------------------------");
         });
