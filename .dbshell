@@ -1,0 +1,9 @@
+db.users.remove();
+show dbs
+use meteor
+show
+db.users.find().pretty()
+db.roles.find().pretty()
+db.users.find().pretty()
+db.roles.find().pretty()
+db.users.find().pretty()

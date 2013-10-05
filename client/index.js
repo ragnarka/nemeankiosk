@@ -1,3 +1,5 @@
+var notify, removeNotice;
+
 (function (Meteor) {
 	
 	Meteor.startup(function() {
@@ -14,20 +16,78 @@
         "/stats": "stats"
 	});
 
+
+    Template.index.helpers({
+        /**
+         * Name of logged in user to be displayed in view
+         * @returns {*}
+         */
+        'displayName': function() {
+            return (Meteor.userId() && Meteor.user() && Meteor.user().profile)
+                ? Meteor.user().profile.name
+                : '';
+        },
+
+        /**
+         * Are the logged in user a superuser?
+         * @returns {Boolean}
+         */
+        'isSuperuser': function() {
+            return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
+        },
+
+        /** Decided whether to show a displayMessage **/
+        'displayMessage': function() {
+            return Session.get('displayMessage');
+        },
+
+        /** Type of displayMessage **/
+        'type': function() {
+            return Session.get('type');
+        },
+
+        /** Message of displayMessage **/
+        'message': function() {
+            return Session.get('message');
+        },
+
+        /** Title of displayMessage **/
+        'title': function() {
+            return Session.get('title');
+        }
+    });
+
+    Template.index.events({
+        /** Hide displayMessage from view **/
+        'click .close': function(event, template) {
+            removeNotice();
+        }
+    });
+
+
     /**
-     * Name of logged in user to be displayed in view
-     * @returns {*}
+     * Display a message to the user
+     *
+     * @param title
+     * @param message
+     * @param type
      */
-    Template.index.displayName = function() {
-       return (Meteor.userId() && Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.name : '';
+    notify = function(title, message, type)
+    {
+        Session.set('displayMessage', true);
+        Session.set('type', type);
+        Session.set('title', title);
+        Session.set('message', message);
     }
 
     /**
-     * Are the logged in user a superuser?
-     * @returns {Boolean}
+     * Remove the displayed message
      */
-    Template.index.isSuperuser = function() {
-        return Roles.userIsInRole(Meteor.user(), ['Superbruker']);
+    removeNotice = function() {
+        Session.set('displayMessage', false);
+        Session.set('type', null);
+        Session.set('message', null);
+        Session.set('title', null);
     }
 
 
