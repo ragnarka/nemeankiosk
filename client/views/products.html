@@ -1,11 +1,13 @@
 <template name="products">
     <h2>Vareliste</h2>
     <div id="products">
-        <a class="btn btn-default add">Legg til produkt</a>
-        
+
         {{#if addProduct}}
-            {{>addProduct}}
-            {{/if}}
+        {{>addProduct}}
+        {{else}}
+        <a class="add btn btn-default" title="Legg til produkt"><i class="icon-plus"></i></a>
+        <a class="btn btn-default import">Importer</a>
+        {{/if}}
 
         <table class="table table-striped table-hover">
             <thead>
@@ -13,38 +15,32 @@
                     <td> Navn</td>
                     <td> Strekkode</td>
                     <td> Pris</td>
-                    <td></td>
+                    <td> Innkjøpspris</td>
+                    <td> Antall</td>
                 </tr>
             </thead>
-            
+
             {{#each products}}
             <tr>
+            {{#unless editProduct}}
                 <td>{{name}}</td>
-                <td>{{strekkode}}</td>
-                <td>{{pris}}</td>
-                <td><a class="btn btn-default">Legg til</a></td>
+                <td>{{barcode}}</td>
+                <td>{{#if price}}{{price}},- {{else}} 0,- {{/if}}</td>
+                <td>{{#if purchasePrice}}{{purchasePrice}},- {{else}} 0,- {{/if}}</td>
+                <td>{{#if amount}} {{amount}} {{else}} 0 {{/if}}</td>
+                <td><a class="btn btn-default delete">Slett</a></td>
+                <td><a class="btn btn-default edit">Endre</a></td>
+            {{else}}
+                <td id="name">{{name}}</td>
+                <td id="barcode">{{barcode}}</td>
+                <td><input class="span1" id="price" type="text" value="{{#if price}}{{price}} {{else}} 0 {{/if}}"></input>,-</td>
+                <td><input class="span1" id="purchasePrice" type="text" value="{{#if purchasePrice}}{{purchasePrice}} {{else}} 0 {{/if}}"></input>,-</td>
+                <td><input class="span1" id="amount" type="text" value="{{#if amount}} {{amount}} {{else}} 0 {{/if}}"></input></td>
+                <td><a class="btn btn-default save">Lagre</a></td>
+                <td></td>
+            {{/unless}}
             </tr>
             {{/each}}
         </table>
     </div>
-
-</template>
-
-<template name="addProduct">
-    <div id="newProduct">
-        <input id="name" type="text" placeholder="Navn..">
-        </input>
-        <input id="barcode" type="text" placeholder="Strekkode..">
-        </input>
-        <input id="price" type="text" placeholder="Pris..">
-        </input>
-
-        <input id="purchasePrice" type="text" placeholder="Innkjøpspris..">
-        </input>
-        <input id="inStock" type="text" placeholder="Antall på lager..">
-        </input>
-
-        <input id="quantity" type="text" placeholder="Antall totalt..">
-        </input>
-        <a class="btn btn-default newProduct">Legg til</a>
 </template>

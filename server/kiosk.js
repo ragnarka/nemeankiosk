@@ -2,15 +2,14 @@
 
 ( function(Meteor, _) {
 
-        //
-        Meteor.startup(function() {
-            console.log("Nemean Kiosk is running at server!");
-            Products = new Meteor.Collection("products");
+    // 
+    Meteor.startup(function() {
+        console.log("Nemean Kiosk is running at server!");
+        Products = new Meteor.Collection("products");
+        console.log("Have fun!");
             Orders = new Meteor.Collection("orders");
-            importProducts();
-            console.log("Have fun!");
-            console.log("-------------------------------------------");
-        });
+        console.log("-------------------------------------------");
+    });
 
         // Function imports external products
         function importProducts() {
@@ -27,10 +26,32 @@
             Orders.insert(order);
             console.log(Orders.find({}).fetch());
         }
+    function deleteProduct(barcode) {
+        Products.remove({barcode: barcode});
+    }
+
+    function updateProduct(product) {
+        Products.update({_id: product._id}, {$set: {
+            price: product.price,
+            purchasePrice: product.purchasePrice,
+            amount: product.amount
+        }});
+    }
+
+    function addProduct(product) {
+        Products.insert(product);
+        console.log("Product " +product.name+ " was added");
+    }
+
+// Publishes product collection
+    Meteor.publish("products", function() {
+        return Products.find({});
+    });
 
         Meteor.methods({
 
             'getProducts' : function() {
+    Meteor.methods({
                 return Products.find().fetch();
             },
 
@@ -49,6 +70,24 @@
         });
 
         // Publishes product collection
+        "addProduct": function(product) {
+            addProduct(product);
+        },
+
+        "deleteProduct": function(barcode) {
+            deleteProduct(barcode);
+        },
+
+        "updateProduct": function(product) {
+            console.log(product);
+            updateProduct(product);
+        },
+
+
+        "importProducts": function() {
+            console.log("Hallas");
+            importProducts();
+        }
         Meteor.publish("orders", function() {
             return Orders.find({});
         });
@@ -57,5 +96,6 @@
         Meteor.publish("cashiers", function() {
             return Cashiers.find({});
         });
+    });
 
-    }(Meteor, _));
+}(Meteor, _));
