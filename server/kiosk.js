@@ -6,8 +6,8 @@
         Meteor.startup(function() {
             console.log("Nemean Kiosk is running at server!");
             Products = new Meteor.Collection("products");
-            Orders = new Meteor.Collection("orders");   
             console.log("Have fun!");
+            Orders = new Meteor.Collection("orders");
             console.log("-------------------------------------------");
         });
 
@@ -50,13 +50,22 @@
             console.log("Product " + product.name + " was added");
         }
 
-        // Publishes product collection
-        Meteor.publish("products", function() {
-            return Products.find({});
-        });
-
 
         Meteor.methods({
+
+            'getProducts' : function() {
+                return Products.find().fetch();
+            },
+
+            'completeOrder' : function(cart, cashierBarcode, date) {
+                var order = {};
+                order.cart = cart;
+                order.cashier = cashierBarcode;
+                order.date = date;
+                insertOrder(order);
+            },
+
+            // Publishes product collection
             "addProduct" : function(product) {
                 addProduct(product);
             },
@@ -73,23 +82,16 @@
             "importProducts" : function() {
                 console.log("Hallas");
                 importProducts();
-            },
-            'getProducts' : function() {
-                return Products.find().fetch();
-            },
-
-            'completeOrder' : function(cart, cashierBarcode, date) {
-                var order = {};
-                order.cart = cart;
-                order.cashier = cashierBarcode;
-                order.date = date;
-                insertOrder(order);
             }
         });
 
         // Publishes product collection
         Meteor.publish("products", function() {
             return Products.find({});
+        });
+
+        Meteor.publish("orders", function() {
+            return Orders.find({});
         });
 
         // Publishes cashier collection

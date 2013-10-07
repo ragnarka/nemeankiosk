@@ -126,7 +126,9 @@
         // Save order to DB with cashiers barcode
         function completeOrder(cart, cashierBarcode) {
             if(!_.isEmpty(cart)){
-                Meteor.call("completeOrder", cart, cashierBarcode, new Date());
+                Meteor.call("completeOrder", cart, cashierBarcode, new Date(), function(e) {
+                    console.log(e);
+                });
                 resetCart();
             }
             else {

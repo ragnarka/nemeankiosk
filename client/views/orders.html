@@ -1,0 +1,27 @@
+<template name="orders">
+    <h2>Salgsoversikt</h2>
+    <div id="orders">
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th> Dato</th>
+                    <th> Total</th>
+                  
+                </tr>
+            </thead>
+            {{#if orders}}
+            {{#each orders}}
+            <tr>
+                <td>{{cashier}}</td>
+                <td>{{date}}</td>
+                <td>{{total}},-</td>
+            </tr>
+            {{/each}}
+            {{/if}}
+        </table>
+        <b>Antall ordre: {{numberOfOrders}}</b> 
+    </div>
+
+</template>
